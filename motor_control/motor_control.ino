@@ -1,4 +1,9 @@
-#include <Sparkfun_TB6612FNG_Arduino_Library-master.h>
+
+#include <LSM9DS1_Registers.h>
+#include <LSM9DS1_Types.h>
+#include <SparkFunLSM9DS1.h>
+#include <SparkFun_TB6612.h>
+
 // Pins for all inputs, keep in mind the PWM defines must be on PWM pins
 #define AIN1 2
 #define BIN1 7
@@ -7,35 +12,23 @@
 #define PWMA 5
 #define PWMB 6
 #define STBY 9
+
 // these constants are used to allow you to make your motor configuration 
+
+
 // line up with function names like forward.  Value can be 1 or -1
 const int offsetA = 1;
 const int offsetB = 1;
 
+Motor motor1(AIN1, AIN2, PWMA, offsetA, STBY);
+
+Motor motor2(BIN1, BIN2, PWMB, offsetB, STBY);
+
 void setup() {
-  // put your setup code here, to run once:
-  
 }
 
 void loop()
 {
-   //Use of the drive function which takes as arguements the speed
-   //and optional duration.  A negative speed will cause it to go
-   //backwards.  Speed can be from -255 to 255.  Also use of the 
-   //brake function which takes no arguements.
-   motor1.drive(255,1000);
-   motor1.drive(-255,1000);
-   motor1.brake();
-   delay(1000);
-
-   //Use of the drive function which takes as arguements the speed
-   //and optional duration.  A negative speed will cause it to go
-   //backwards.  Speed can be from -255 to 255.  Also use of the 
-   //brake function which takes no arguements.
-   motor2.drive(255,1000);
-   motor2.drive(-255,1000);
-   motor2.brake();
-   delay(1000);
 
    //Use of the forward function, which takes as arguements two motors
    //and optionally a speed.  If a negative number is used for speed
@@ -65,5 +58,4 @@ void loop()
    //Use of brake again.
    brake(motor1, motor2);
    delay(1000);
-
 }
