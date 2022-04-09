@@ -1,69 +1,95 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
 
-float dist_a = 0.0, //measured distance
-      spd_a; //measured speed
-int dist_t = 10, //distance threshold
-    spd_reg = 10; //regular speed
+#define TRIG_ON PORTB |= (1<<PINB1);
+#define TRIG_OFF PORTB &= ~(1<<PINB1);
+
 const int STOP = 0, FORWARD = 1, LEFT = 2, RIGHT = 3; //fsm states
 
-ISR(ADC_vect)
+int state = STOP; //Current state
+int count = 0; //Counter for RIGHT state
+int echoPin = 8;
+
+float spd_m; //measured speed
+float spd_reg = 10.0; //regular speed
+float spd_dl = 10.0; //desired speed for left motor
+float spd_dr = 10.0; //desired speed for right motor
+
+long dist_m = 0; //measured distance
+long dist_t = 10; //distance threshold
+
+long getDistance()
 {
-  dist_a = ADC;
+  long distance = 0;
+  long duration = 0;
+
+  TRIG_ON
+  delayMicroseconds(10);
+  TRIG_OFF
+
+  duration = pulseIn(echoPin, HIGH, 150000L);
+  distance = duration/58; //COnvert duration to cm
+  return distance; 
 }
 
 void setup() {
-  //Set ADC at channel 0 with a prescale of 2
-  ADCSRA |= (1<<ADEN) | (1<<ADIE); //Enable ADC with interrupts
-
-  //Set ADC sampling frequency
-
-  sei(); //enable global interrupts
+  DDRB &= ~(1<<DDB0); //Set pin B0 as input for echo 
+  DDRB |= (1<<DDB1); //Set pin B1 as output for trigger
+  TRIG_OFF //Set to low to initialize the sensor
+  Serial.begin(9600);
 }
 
 void loop() {
-  int state = 0, //current state
-      count = 0;
-  float spd_d = 10.0; //desired speed
+  dist_m = getDistance();
 
   switch(state)
   {
     case STOP:
-      if(dist_a > dist_t)
+      if(dist_m > dist_t)
       {
-        spd_d = spd_reg;
+        spd_dl = spd_reg;
+        spd_dr = spd_reg;
         state = FORWARD;
       }
-      else if(dist_a <= dist_t)
+      else if(dist_m <= dist_t)
       {
         state = LEFT;
       }
+      Serial.println("STOP");
+      delay(500);
       break;
       
     case FORWARD:
-      if(dist_a <= dist_t)
+      if(dist_m <= dist_t)
       {
-        spd_d = 0;
+        spd_dl = 0;
+        spd_dr = 0;
         state = STOP;
       }
+      Serial.println("FORWARD");
+      delay(500);
       break;
       
     case LEFT:
-      if(dist_a > dist_t)
+      if(dist_m > dist_t)
       {
-        spd_d = 0;
+        spd_dl = 0;
+        spd_dr = 0;
         state = STOP;
       }
-      else if(dist_a <= dist_t)
+      else if(dist_m <= dist_t)
       {
         state = RIGHT;
       }
+      Serial.println("LEFT");
+      delay(500);
       break;
       
     case RIGHT:
-      if(dist_a > dist_t || count >= 2)
+      if(count >= 1)
       {
-        spd_d = 0;
+        spd_dl = 0;
+        spd_dr = 0;
         count = 0;
         state = STOP;
       }
@@ -71,9 +97,13 @@ void loop() {
       {
         count += 1;
       }
+      Serial.println("RIGHT");
+      delay(500);
       break;
 
       default:
+        spd_dl = 0;
+        spd_dr = 0;
         state = STOP;
         break;
   }
