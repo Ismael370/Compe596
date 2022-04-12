@@ -1,8 +1,22 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
 
+#include <SparkFun_TB6612.h>
+
 #define TRIG_ON PORTB |= (1<<PINB1);
 #define TRIG_OFF PORTB &= ~(1<<PINB1);
+// Pins for all inputs, keep in mind the PWM defines must be on PWM pins
+#define AIN1 A0
+#define BIN1 A2
+#define AIN2 A1
+#define BIN2 A3
+#define PWMA 2
+#define PWMB 3
+#define STBY 22
+
+// line up with function names like forward.  Value can be 1 or -1
+const int offsetA = 1;
+const int offsetB = 1;
 
 const int STOP = 0, FORWARD = 1, LEFT = 2, RIGHT = 3; //fsm states
 
@@ -17,6 +31,10 @@ float spd_dr = 10.0; //desired speed for right motor
 
 long dist_m = 0; //measured distance
 long dist_t = 10; //distance threshold
+
+Motor motor1(AIN1, AIN2, PWMA, offsetA, STBY);
+
+Motor motor2(BIN1, BIN2, PWMB, offsetB, STBY);
 
 long getDistance()
 {
@@ -49,6 +67,7 @@ void loop() {
       {
         spd_dl = spd_reg;
         spd_dr = spd_reg;
+        brake(motor1, motor2);
         state = FORWARD;
       }
       else if(dist_m <= dist_t)
@@ -64,6 +83,7 @@ void loop() {
       {
         spd_dl = 0;
         spd_dr = 0;
+        forward(motor1, motor2, 150);
         state = STOP;
       }
       Serial.println("FORWARD");
@@ -75,6 +95,7 @@ void loop() {
       {
         spd_dl = 0;
         spd_dr = 0;
+        left(motor1, motor2, 100);
         state = STOP;
       }
       else if(dist_m <= dist_t)
@@ -90,6 +111,7 @@ void loop() {
       {
         spd_dl = 0;
         spd_dr = 0;
+        right(motor1, motor2, 100);
         count = 0;
         state = STOP;
       }
@@ -105,6 +127,7 @@ void loop() {
         spd_dl = 0;
         spd_dr = 0;
         state = STOP;
+        brake(motor1, motor2);
         break;
   }
 }
