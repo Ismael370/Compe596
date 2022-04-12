@@ -2,16 +2,17 @@
 #include <LSM9DS1_Registers.h>
 #include <LSM9DS1_Types.h>
 #include <SparkFunLSM9DS1.h>
+
 #include <SparkFun_TB6612.h>
 
 // Pins for all inputs, keep in mind the PWM defines must be on PWM pins
-#define AIN1 2
-#define BIN1 7
-#define AIN2 4
-#define BIN2 8
-#define PWMA 5
-#define PWMB 6
-#define STBY 9
+#define AIN1 A0
+#define BIN1 A2
+#define AIN2 A1
+#define BIN2 A3
+#define PWMA 2
+#define PWMB 3
+#define STBY 22
 
 // these constants are used to allow you to make your motor configuration 
 
