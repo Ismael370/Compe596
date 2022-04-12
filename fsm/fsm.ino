@@ -33,7 +33,6 @@ long dist_m = 0; //measured distance
 long dist_t = 10; //distance threshold
 
 Motor motor1(AIN1, AIN2, PWMA, offsetA, STBY);
-
 Motor motor2(BIN1, BIN2, PWMB, offsetB, STBY);
 
 long getDistance()
@@ -46,7 +45,7 @@ long getDistance()
   TRIG_OFF
 
   duration = pulseIn(echoPin, HIGH, 150000L);
-  distance = duration/58; //COnvert duration to cm
+  distance = duration/58; //Convert duration to cm
   return distance; 
 }
 
@@ -63,11 +62,11 @@ void loop() {
   switch(state)
   {
     case STOP:
+      brake(motor1, motor2);
       if(dist_m > dist_t)
       {
         spd_dl = spd_reg;
         spd_dr = spd_reg;
-        brake(motor1, motor2);
         state = FORWARD;
       }
       else if(dist_m <= dist_t)
@@ -79,11 +78,11 @@ void loop() {
       break;
       
     case FORWARD:
+      forward(motor1, motor2, 150);
       if(dist_m <= dist_t)
       {
         spd_dl = 0;
         spd_dr = 0;
-        forward(motor1, motor2, 150);
         state = STOP;
       }
       Serial.println("FORWARD");
@@ -91,35 +90,19 @@ void loop() {
       break;
       
     case LEFT:
-      if(dist_m > dist_t)
+      left(motor1, motor2, 100);
+      if((dist_m > dist_t && count == 0) || (count >= 2))
       {
         spd_dl = 0;
         spd_dr = 0;
-        left(motor1, motor2, 100);
-        state = STOP;
-      }
-      else if(dist_m <= dist_t)
-      {
-        state = RIGHT;
-      }
-      Serial.println("LEFT");
-      delay(500);
-      break;
-      
-    case RIGHT:
-      if(count >= 1)
-      {
-        spd_dl = 0;
-        spd_dr = 0;
-        right(motor1, motor2, 100);
-        count = 0;
         state = STOP;
       }
       else
       {
         count += 1;
       }
-      Serial.println("RIGHT");
+
+      Serial.println("LEFT");
       delay(500);
       break;
 
