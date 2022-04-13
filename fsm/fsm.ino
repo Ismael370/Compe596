@@ -1,11 +1,16 @@
+//accelometer libraries
+#include <LSM9DS1_Registers.h>
+#include <LSM9DS1_Types.h>
+#include <SparkFunLSM9DS1.h>
+//general libraries
 #include <avr/interrupt.h>
 #include <avr/io.h>
-
+//motor library
 #include <SparkFun_TB6612.h>
-
+//To enable and disable the ultrasensor
 #define TRIG_ON PORTB |= (1<<PINB1);
 #define TRIG_OFF PORTB &= ~(1<<PINB1);
-// Pins for all inputs, keep in mind the PWM defines must be on PWM pins
+// Pins for the motor inputs
 #define AIN1 A0
 #define BIN1 A2
 #define AIN2 A1
@@ -78,19 +83,21 @@ void loop() {
       break;
       
     case FORWARD:
-      forward(motor1, motor2, 150);
       if(dist_m <= dist_t)
       {
         spd_dl = 0;
         spd_dr = 0;
         state = STOP;
       }
+      else
+      {
+        forward(motor1, motor2, 150);
+      }
       Serial.println("FORWARD");
       delay(500);
       break;
       
     case LEFT:
-      left(motor1, motor2, 100);
       if((dist_m > dist_t && count == 0) || (count >= 2))
       {
         spd_dl = 0;
@@ -99,6 +106,7 @@ void loop() {
       }
       else
       {
+        left(motor1, motor2, 100);
         count += 1;
       }
 
