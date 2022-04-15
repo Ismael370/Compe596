@@ -1,4 +1,4 @@
-//accelometer libraries
+//accelerometer libraries
 #include <LSM9DS1_Registers.h>
 #include <LSM9DS1_Types.h>
 #include <SparkFunLSM9DS1.h>
@@ -23,7 +23,7 @@
 const int offsetA = 1;
 const int offsetB = 1;
 
-const int STOP = 0, FORWARD = 1, LEFT = 2, RIGHT = 3; //fsm states
+const int STOP = 0, FORWARD = 1, LEFT = 2; //fsm states
 
 int state = STOP; //Current state
 int count = 0; //Counter for RIGHT state
