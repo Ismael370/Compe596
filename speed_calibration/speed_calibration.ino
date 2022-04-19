@@ -2,7 +2,7 @@
 #include <SPI.h>
 #include <SparkFunLSM9DS1.h>
 
-#define SAMPLE_SPEED 250 // 250 ms between samples
+#define SAMPLE_SPEED 1000 // 1s between samples
 
 LSM9DS1 imu; //9dof sensor
 
@@ -25,13 +25,16 @@ void loop() {
 //  Serial.print(imu.calcAccel(imu.ax));
 //
   Serial.print(" y: ");
-  Serial.println(imu.calcAccel(imu.ay)/9.8);
+  Serial.println((imu.calcAccel(imu.ay)/9.8)+0.01);
 //  
 //  Serial.print(" z: ");
 //  Serial.println(imu.calcAccel(imu.az));
 
-//  velocity = velocity + (imu.calcAccel(imu.ay)*(SAMPLE_SPEED/1000));
-//  Serial.println(velocity);
+  velocity = velocity + (imu.calcAccel(imu.ay)*(SAMPLE_SPEED/1000));
+
+  if(velocity < 0)
+    velocity = 0;
+  Serial.println(velocity);
 
   delay(SAMPLE_SPEED);
 }
