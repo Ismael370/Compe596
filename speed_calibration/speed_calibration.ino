@@ -5,8 +5,8 @@
 #define SAMPLE_SPEED 250 // 250ms between samples
 
 LSM9DS1 imu; //9dof sensor
-float fwd_accel = 0; //in m/s^2
-float velocity = 0; //in m/s
+double fwd_accel = 0; //in m/s^2
+double velocity = 0; //in m/s
 
 void setup() {
   Wire.begin();
@@ -25,7 +25,7 @@ void loop() {
   Serial.print("A: ");
   Serial.print(fwd_accel);
 
-  velocity = velocity + (fwd_accel*(SAMPLE_SPEED/1000));
+  velocity += (fwd_accel*(SAMPLE_SPEED/1000.0));
 
   if(velocity < 0)
     velocity = 0;
