@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include <SPI.h>
 #include <SparkFunLSM9DS1.h>
-#define SAMPLE_SPEED 250 // 250ms between samples
+#define SAMPLE_SPEED 250 //250ms between samples
 
 float error = 0;
 float previous_error = 0;

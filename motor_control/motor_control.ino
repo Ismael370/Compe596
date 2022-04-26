@@ -1,4 +1,3 @@
-
 #include <LSM9DS1_Registers.h>
 #include <LSM9DS1_Types.h>
 #include <SparkFunLSM9DS1.h>
@@ -12,7 +11,7 @@
 #define BIN2 A3
 #define PWMA 2
 #define PWMB 3
-#define STBY 22
+#define STBY 7
 
 // these constants are used to allow you to make your motor configuration 
 
