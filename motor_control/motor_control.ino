@@ -1,6 +1,3 @@
-#include <LSM9DS1_Registers.h>
-#include <LSM9DS1_Types.h>
-#include <SparkFunLSM9DS1.h>
 
 #include <SparkFun_TB6612.h>
 
@@ -29,33 +26,12 @@ void setup() {
 
 void loop()
 {
-
-   //Use of the forward function, which takes as arguements two motors
-   //and optionally a speed.  If a negative number is used for speed
-   //it will go backwards
    forward(motor1, motor2, 150);
    delay(1000);
-
-   //Use of the back function, which takes as arguments two motors 
-   //and optionally a speed.  Either a positive number or a negative
-   //number for speed will cause it to go backwards
    back(motor1, motor2, -150);
    delay(1000);
-
-   //Use of the brake function which takes as arguments two motors.
-   //Note that functions do not stop motors on their own.
-   brake(motor1, motor2);
-   delay(1000);
-
-   //Use of the left and right functions which take as arguements two
-   //motors and a speed.  This function turns both motors to move in 
-   //the appropriate direction.  For turning a single motor use drive.
    left(motor1, motor2, 100);
    delay(1000);
    right(motor1, motor2, 100);
-   delay(1000);
-
-   //Use of brake again.
-   brake(motor1, motor2);
    delay(1000);
 }
