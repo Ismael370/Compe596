@@ -1,4 +1,3 @@
-
 #include <SparkFun_TB6612.h>
 
 // Pins for all inputs, keep in mind the PWM defines must be on PWM pins
