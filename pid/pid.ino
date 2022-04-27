@@ -12,12 +12,12 @@ float output = 0;
 
 //charles is testing his git access etc :)
 
-float kp = 0.5;
-float ki = 0;
-float kd = 0;
+float kp = 0.5; //proportional gain
+float ki = 0; //integral gain
+float kd = 0; //derivative gain
 
-float spd_d = 10; //Desired speed
-float spd_a = 0; //Actual speed
+float spd_desired = 10;
+float spd_actual = 0; 
 float motor_spd = 0;
 float fwd_accel = 0;
 float velocity = 0;
@@ -48,9 +48,9 @@ void setup() {
 }
 
 void loop() {
-  spd_a = getSpeed();
+  spd_actual = getSpeed();
   
-  error = spd_d - spd_a;
+  error = spd_desired - spd_actual;
   integral = integral + (error*deltaT);
   derivative = (error - previous_error)/deltaT;
   previous_error = error;
