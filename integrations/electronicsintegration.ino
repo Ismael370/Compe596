@@ -51,15 +51,45 @@ void setup() {
   DDRB |= (1<<DDB1); //Set pin B1 as output for trigger
   TRIG_OFF
   Serial.begin(9600);
+  Wire.begin();
+  imu.begin(); //Use pins A4 & A5 by default
+  Serial.begin(9600);
 }
 
 void loop()
 {
+	//GET THE DISTANCE SENSOR FEED
 	long distance = getDistance();
 	Serial.println(distance);
 	//TELL MOTORS TO SPIN FORWARD AND BACKWARDS
-   forward(motor1, motor2, 150);
-   delay(1000);
-   back(motor1, motor2, -150);
-   delay(1000);
+   
+   
+   
+   
+
+   if(imu.accelAvailable())
+  {
+    imu.readAccel();
+  }
+
+  fwd_accel = (imu.calcAccel(imu.ay)*9.8);
+  
+  Serial.print("A: ");
+  Serial.print(fwd_accel);
+
+  velocity += (fwd_accel*(SAMPLE_SPEED/1000.0));
+
+  if(velocity < 0)
+    velocity = 0;
+  Serial.print("\tV:");
+  Serial.println(velocity);
+
+  delay(SAMPLE_SPEED);
+
+  if(distance < 5){
+	back(motor1, motor2, -150);}
+  else{
+	forward(motor1, motor2, 150);
+  }
+
 }
