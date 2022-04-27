@@ -39,6 +39,11 @@ float spd_m; //measured speed
 float spd_reg = 10.0; //regular speed
 float spd_d = 10.0; //desired speed
 
+//PID variables
+float fwd_accel = 0; //in m/s^2
+float velocity = 0; //in m/s
+float deltaT = (SAMPLE_SPEED/1000.0);
+
 long dist_m = 0; //measured distance
 long dist_t = 10; //distance threshold
 
@@ -59,6 +64,23 @@ long getDistance()
   duration = pulseIn(echoPin, HIGH, 150000L);
   distance = duration/58; //Convert duration to cm
   return distance; 
+}
+
+float getSpeed()
+{
+  if(imu.accelAvailable())
+  {
+    imu.readAccel();
+  }
+
+  fwd_accel = (imu.calcAccel(imu.ay)*9.8);
+
+  velocity += (fwd_accel*deltaT);
+
+  if(velocity < 0)
+    velocity = 0;
+
+  return velocity;
 }
 
 float fsm(long distance)
@@ -133,4 +155,5 @@ void setup() {
 void loop() {
   dist_m = getDistance();
   spd_d = fsm(dist_m);
+  spd_m = getSpeed();
 }

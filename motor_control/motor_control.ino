@@ -29,8 +29,8 @@ void loop()
    delay(1000);
    back(motor1, motor2, -150);
    delay(1000);
-   left(motor1, motor2, 100);
-   delay(1000);
-   right(motor1, motor2, 100);
-   delay(1000);
+   //left(motor1, motor2, 100);
+   //delay(1000);
+   //right(motor1, motor2, 100);
+   //delay(1000);
 }
