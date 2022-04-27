@@ -61,12 +61,8 @@ void loop()
 	//GET THE DISTANCE SENSOR FEED
 	long distance = getDistance();
 	Serial.println(distance);
-	//TELL MOTORS TO SPIN FORWARD AND BACKWARDS
-   
-   
-   
-   
-
+	
+	//GET THE 
    if(imu.accelAvailable())
   {
     imu.readAccel();
@@ -86,6 +82,7 @@ void loop()
 
   delay(SAMPLE_SPEED);
 
+  //TELL MOTORS TO SPIN FORWARD AND BACKWARDS
   if(distance < 5){
 	back(motor1, motor2, -150);}
   else{
