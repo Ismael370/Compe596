@@ -10,7 +10,6 @@ float derivative = 0;
 float deltaT = (SAMPLE_SPEED/1000.0);
 float output = 0;
 
-//charles is testing his git access etc :)
 
 float kp = 0.5; //proportional gain
 float ki = 0; //integral gain
