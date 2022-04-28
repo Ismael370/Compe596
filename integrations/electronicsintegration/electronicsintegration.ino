@@ -30,19 +30,33 @@ Motor motor2(BIN1, BIN2, PWMB, offsetB, STBY);
 #define TRIG_OFF PORTB &= ~(1<<PINB1);
 int trigPin = 9;
 int echoPin = 8;
+long distance = 0;
 
-long getDistance()
+void getDistance()
 {
-  long dist_m = 0;
   long duration = 0;
-
   TRIG_ON
   delayMicroseconds(10);
   TRIG_OFF
-
   duration = pulseIn(echoPin, HIGH, 150000L);
-  dist_m = duration/58;
-  return dist_m; 
+  distance = duration/58; 
+  Serial.println("Distance: " + distance);
+
+}
+
+void getSpeed()
+{
+  if(imu.accelAvailable())
+	    imu.readAccel();
+  fwd_accel = (imu.calcAccel(imu.ay)*9.8);
+  velocity += (fwd_accel*(SAMPLE_SPEED/1000.0));
+  
+  if(velocity < 0)
+    velocity = 0;
+
+  Serial.println("Velocity: " + velocity);
+
+  delay(SAMPLE_SPEED);
 }
 
 void setup() {
@@ -57,35 +71,13 @@ void setup() {
 
 void loop()
 {
-	//GET THE DISTANCE SENSOR FEED
-	long distance = getDistance();
-	Serial.println(distance);
-	
-	//GET THE 
-  if(imu.accelAvailable())
-  {
-    imu.readAccel();
-  }
-
-  fwd_accel = (imu.calcAccel(imu.ay)*9.8);
+	getDistance();
+	getSpeed();
   
-  Serial.print("A: ");
-  Serial.print(fwd_accel);
-
-  velocity += (fwd_accel*(SAMPLE_SPEED/1000.0));
-
-  if(velocity < 0)
-    velocity = 0;
-  Serial.print("\tV:");
-  Serial.println(velocity);
-
-  delay(SAMPLE_SPEED);
-
-  //TELL MOTORS TO SPIN FORWARD AND BACKWARDS
-  if(distance < 5){
-	back(motor1, motor2, -150);}
-  else{
-	forward(motor1, motor2, 150);
+    if(distance < 5)
+		back(motor1, motor2, 150);
+	else
+		forward(motor1, motor2, 150);	
   }
 
 }
