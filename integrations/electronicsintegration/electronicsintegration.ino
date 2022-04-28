@@ -6,8 +6,8 @@
 //VARIABLES FOR 9DOF
 #define SAMPLE_SPEED 250 // 250ms between samples
 LSM9DS1 imu; //9dof sensor
-double fwd_accel = 0; //in m/s^2
-double velocity = 0; //in m/s
+float fwd_accel = 0; //in m/s^2
+float velocity = 0; //in m/s
 
 //MOTOR CONTROLLER VARIABLES
 // Pins for all inputs, keep in mind the PWM defines must be on PWM pins
@@ -50,7 +50,6 @@ void setup() {
   DDRB &= ~(1<<DDB0); //Set pin B0 as input for echo 
   DDRB |= (1<<DDB1); //Set pin B1 as output for trigger
   TRIG_OFF
-  Serial.begin(9600);
   Wire.begin();
   imu.begin(); //Use pins A4 & A5 by default
   Serial.begin(9600);
@@ -63,7 +62,7 @@ void loop()
 	Serial.println(distance);
 	
 	//GET THE 
-   if(imu.accelAvailable())
+  if(imu.accelAvailable())
   {
     imu.readAccel();
   }
