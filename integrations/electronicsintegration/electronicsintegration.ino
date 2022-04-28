@@ -8,6 +8,7 @@
 LSM9DS1 imu; //9dof sensor
 float fwd_accel = 0; //in m/s^2
 float velocity = 0; //in m/s
+float heading = 0;
 
 //MOTOR CONTROLLER VARIABLES
 // Pins for all inputs, keep in mind the PWM defines must be on PWM pins
@@ -40,8 +41,7 @@ void getDistance()
   TRIG_OFF
   duration = pulseIn(echoPin, HIGH, 150000L);
   distance = duration/58; 
-  Serial.println("Distance: " + distance);
-
+  Serial.print("Distance: "); Serial.println(distance);
 }
 
 void getSpeed()
@@ -54,9 +54,28 @@ void getSpeed()
   if(velocity < 0)
     velocity = 0;
 
-  Serial.println("Velocity: " + velocity);
-
+  Serial.print("Velocity: "); Serial.println(velocity, 2);
   delay(SAMPLE_SPEED);
+}
+
+void getHeading(){
+  if(imu.magAvailable())
+    imu.readMag();
+
+  if (my == 0)
+    heading = (mx < 0) ? PI : 0;
+  else
+    heading = atan2(mx, my);
+
+  heading -= DECLINATION * PI / 180;
+
+  if (heading > PI) heading -= (2 * PI);
+  else if (heading < -PI) heading += (2 * PI);
+
+  // Convert everything from radians to degrees:
+  heading *= 180.0 / PI;
+
+  Serial.print("Heading: "); Serial.println(heading, 2);
 }
 
 void setup() {
@@ -73,6 +92,7 @@ void loop()
 {
 	getDistance();
 	getSpeed();
+	getHeading();
   
     if(distance < 5)
 		back(motor1, motor2, 150);
