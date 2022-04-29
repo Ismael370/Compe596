@@ -16,9 +16,8 @@
 const int offsetA = 1;
 const int offsetB = 1;
 
-Motor motor1(AIN1, AIN2, PWMA, offsetA, STBY);
-
-Motor motor2(BIN1, BIN2, PWMB, offsetB, STBY);
+Motor motor1(AIN1, AIN2, PWMA, offsetA, STBY); //Left motor
+Motor motor2(BIN1, BIN2, PWMB, offsetB, STBY); //Right motor
 
 void setup() {
 }
