@@ -8,6 +8,7 @@
 LSM9DS1 imu; //9dof sensor
 float fwd_accel = 0; //in m/s^2
 float velocity = 0; //in m/s
+float heading = 0;
 
 //MOTOR CONTROLLER VARIABLES
 // Pins for all inputs, keep in mind the PWM defines must be on PWM pins
@@ -30,19 +31,51 @@ Motor motor2(BIN1, BIN2, PWMB, offsetB, STBY);
 #define TRIG_OFF PORTB &= ~(1<<PINB1);
 int trigPin = 9;
 int echoPin = 8;
+long distance = 0;
 
-long getDistance()
+void getDistance()
 {
-  long dist_m = 0;
   long duration = 0;
-
   TRIG_ON
   delayMicroseconds(10);
   TRIG_OFF
-
   duration = pulseIn(echoPin, HIGH, 150000L);
-  dist_m = duration/58;
-  return dist_m; 
+  distance = duration/58; 
+  Serial.print("Distance: "); Serial.println(distance);
+}
+
+void getSpeed()
+{
+  if(imu.accelAvailable())
+	    imu.readAccel();
+  fwd_accel = (imu.calcAccel(imu.ay)*9.8);
+  velocity += (fwd_accel*(SAMPLE_SPEED/1000.0));
+  
+  if(velocity < 0)
+    velocity = 0;
+
+  Serial.print("Velocity: "); Serial.println(velocity, 2);
+  delay(SAMPLE_SPEED);
+}
+
+void getHeading(){
+  if(imu.magAvailable())
+    imu.readMag();
+
+  if (my == 0)
+    heading = (mx < 0) ? PI : 0;
+  else
+    heading = atan2(mx, my);
+
+  heading -= DECLINATION * PI / 180;
+
+  if (heading > PI) heading -= (2 * PI);
+  else if (heading < -PI) heading += (2 * PI);
+
+  // Convert everything from radians to degrees:
+  heading *= 180.0 / PI;
+
+  Serial.print("Heading: "); Serial.println(heading, 2);
 }
 
 void setup() {
@@ -57,35 +90,14 @@ void setup() {
 
 void loop()
 {
-	//GET THE DISTANCE SENSOR FEED
-	long distance = getDistance();
-	Serial.println(distance);
-	
-	//GET THE 
-  if(imu.accelAvailable())
-  {
-    imu.readAccel();
-  }
-
-  fwd_accel = (imu.calcAccel(imu.ay)*9.8);
+	getDistance();
+	getSpeed();
+	getHeading();
   
-  Serial.print("A: ");
-  Serial.print(fwd_accel);
-
-  velocity += (fwd_accel*(SAMPLE_SPEED/1000.0));
-
-  if(velocity < 0)
-    velocity = 0;
-  Serial.print("\tV:");
-  Serial.println(velocity);
-
-  delay(SAMPLE_SPEED);
-
-  //TELL MOTORS TO SPIN FORWARD AND BACKWARDS
-  if(distance < 5){
-	back(motor1, motor2, -150);}
-  else{
-	forward(motor1, motor2, 150);
+    if(distance < 5)
+		back(motor1, motor2, 150);
+	else
+		forward(motor1, motor2, 150);	
   }
 
 }
