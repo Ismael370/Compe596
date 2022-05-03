@@ -10,7 +10,6 @@ float derivative = 0;
 float deltaT = (SAMPLE_SPEED/1000.0);
 float output = 0;
 
-
 float kp = 0.5; //proportional gain
 float ki = 0; //integral gain
 float kd = 0; //derivative gain
@@ -20,7 +19,6 @@ float spd_actual = 0;
 float motor_spd = 0;
 float fwd_accel = 0;
 float velocity = 0;
-
 LSM9DS1 imu; //9dof sensor
 
 float getSpeed()
