@@ -5,6 +5,7 @@
 
 //VARIABLES FOR 9DOF
 #define SAMPLE_SPEED 250 // 250ms between samples
+#define DECLINATION -8.58 // Declination (degrees) in Boulder, CO.
 LSM9DS1 imu; //9dof sensor
 float fwd_accel = 0; //in m/s^2
 float velocity = 0; //in m/s
@@ -62,10 +63,10 @@ void getHeading(){
   if(imu.magAvailable())
     imu.readMag();
 
-  if (my == 0)
-    heading = (mx < 0) ? PI : 0;
+  if (imu.my == 0)
+    heading = (imu.mx < 0) ? PI : 0;
   else
-    heading = atan2(mx, my);
+    heading = atan2(imu.mx, imu.my);
 
   heading -= DECLINATION * PI / 180;
 
@@ -83,6 +84,8 @@ void setup() {
   DDRB &= ~(1<<DDB0); //Set pin B0 as input for echo 
   DDRB |= (1<<DDB1); //Set pin B1 as output for trigger
   TRIG_OFF
+
+  //SET UP FOR 9DOF
   Wire.begin();
   imu.begin(); //Use pins A4 & A5 by default
   Serial.begin(9600);
@@ -94,10 +97,8 @@ void loop()
 	getSpeed();
 	getHeading();
   
-    if(distance < 5)
+  if(distance < 5)
 		back(motor1, motor2, 150);
 	else
 		forward(motor1, motor2, 150);	
-  }
-
 }
