@@ -36,11 +36,11 @@ int count = 0; //Counter for RIGHT state
 int echoPin = 8;
 
 float spd_m; //measured speed
-float spd_reg = 10.0; //regular speed
-float spd_d = 10.0; //desired speed
+float spd_reg = 1.0; //regular speed
+float spd_d = 1.0; //desired speed
 
 long dist_m = 0; //measured distance
-long dist_t = 10; //distance threshold
+long dist_t = 15; //distance threshold
 
 Motor motor1(AIN1, AIN2, PWMA, offsetA, STBY);
 Motor motor2(BIN1, BIN2, PWMB, offsetB, STBY);
@@ -59,6 +59,28 @@ long getDistance()
   duration = pulseIn(echoPin, HIGH, 150000L);
   distance = duration/58; //Convert duration to cm
   return distance; 
+}
+
+void motor_fwd(Motor motor1, Motor motor2, int speed1, int speed2)
+{
+  motor1.drive(speed1);
+  motor2.drive(speed2);
+}
+
+void motor_back(Motor motor1, Motor motor2, int speed1, int speed2)
+{
+  int temp1 = abs(speed1);
+  int temp2 = abs(speed2);
+  motor1.drive(-temp1);
+  motor2.drive(-temp2);
+}
+
+void motor_left(Motor motor1, Motor motor2, int speed1, int speed2)
+{
+  int temp1 = abs(speed1)/2;
+  int temp2 = abs(speed2)/2;
+  motor1.drive(-temp1);
+  motor2.drive(temp2);
 }
 
 float fsm(long distance)
@@ -90,7 +112,7 @@ float fsm(long distance)
       }
       else
       {
-        forward(motor1, motor2, 150);
+        motor_fwd(motor1, motor2, 150, 150);
       }
       Serial.println("FORWARD");
       delay(500);
