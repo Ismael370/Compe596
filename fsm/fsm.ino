@@ -32,7 +32,7 @@ const int offsetB = 1;
 const int STOP = 0, FORWARD = 1, LEFT = 2; //fsm states
 
 int state = STOP; //Current state
-int count = 0; //Counter for RIGHT state
+int count = 0;
 int echoPin = 8;
 
 float spd_m; //measured speed
@@ -112,14 +112,18 @@ float fsm(long distance)
       }
       else
       {
+
         motor_fwd(motor1, motor2, 100, 100);
+        forward(motor1, motor2, 100);
       }
       Serial.println("FORWARD");
       delay(500);
       break;
       
     case LEFT:
+
       if((distance > dist_t))
+
       {
         spd = 0;
         state = STOP;
@@ -154,5 +158,7 @@ void setup() {
 
 void loop() {
   dist_m = getDistance();
+  Serial.print("Distance: "); Serial.print(dist_m);
+  Serial.print("  State: ");
   spd_d = fsm(dist_m);
 }
