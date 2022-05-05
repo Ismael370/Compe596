@@ -1,8 +1,8 @@
-#define TRIG_ON PORTB |= (1<<PINB1);
-#define TRIG_OFF PORTB &= ~(1<<PINB1);
+#define TRIG_ON PORTB |= (1<<PINB0);
+#define TRIG_OFF PORTB &= ~(1<<PINB0);
 
-int trigPin = 9;
-int echoPin = 8;
+int trigPin = 8;
+int echoPin = 9;
 
 long getDistance()
 {
@@ -19,8 +19,8 @@ long getDistance()
 }
 
 void setup() {
-  DDRB &= ~(1<<DDB0); //Set pin B0 as input for echo 
-  DDRB |= (1<<DDB1); //Set pin B1 as output for trigger
+  DDRB &= ~(1<<DDB1); //Set pin B0 as input for echo 
+  DDRB |= (1<<DDB0); //Set pin B1 as output for trigger
   TRIG_OFF
   Serial.begin(9600);
 }
