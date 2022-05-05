@@ -38,6 +38,7 @@ int echoPin = 8;
 float spd_m; //measured speed
 float spd_reg = 1.0; //regular speed
 float spd_d = 1.0; //desired speed
+int gSpeed = 50;
 
 long dist_m = 0; //measured distance
 long dist_t = 15; //distance threshold
@@ -94,7 +95,7 @@ float fsm(long distance)
       if(distance > dist_t)
       {
         spd = spd_reg;
-        state = FORWARD;
+        state = SPEED_UP;
       }
       else if(distance <= dist_t)
       {
@@ -108,31 +109,49 @@ float fsm(long distance)
       if(distance <= dist_t)
       {
         spd = 0;
-        state = STOP;
+        state = SLOW_DOWN;
       }
       else
       {
-        motor_fwd(motor1, motor2, 150, 150);
+        motor_fwd(motor1, motor2, gSpeed, gSpeed);
       }
       Serial.println("FORWARD");
       delay(500);
       break;
 
     case SPEED_UP:
+      if(gSpeed<100){
+        gSpeed += 2;
+        motor_fwd(motor1, motor2, gSpeed, gSpeed);
+      }
+      else
+      {
+        state = FORWARD;
+        motor_fwd(motor1, motor2, gSpeed, gSpeed);
+      }
       break;
 
     case SLOW_DOWN:
+      if(gSpeed>50){
+        gSpeed -= 2;
+        motor_fwd(motor1, motor2, gSpeed, gSpeed);
+      }
+      else
+      {
+        state = LEFT;
+        motor_fwd(motor1, motor2, gSpeed, gSpeed);
+      }
       break;
       
     case LEFT:
-      if((distance > dist_t && count == 0) || (count >= 2))
+      if((distance > dist_t)
       {
         spd = 0;
         state = STOP;
       }
       else
       {
-        motor_left(motor1, motor2, 100, 100);
+        motor_left(motor1, motor2, gSpeed, gSpeed);
         count += 1;
       }
 

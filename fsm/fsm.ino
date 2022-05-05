@@ -112,21 +112,21 @@ float fsm(long distance)
       }
       else
       {
-        motor_fwd(motor1, motor2, 150, 150);
+        motor_fwd(motor1, motor2, 100, 100);
       }
       Serial.println("FORWARD");
       delay(500);
       break;
       
     case LEFT:
-      if((distance > dist_t && count == 0) || (count >= 2))
+      if((distance > dist_t))
       {
         spd = 0;
         state = STOP;
       }
       else
       {
-        motor_left(motor1, motor2, 100, 100);
+        motor_left(motor1, motor2, 50,50);
         count += 1;
       }
 
