@@ -129,6 +129,7 @@ float fsm(long distance)
         state = FORWARD;
         motor_fwd(motor1, motor2, gSpeed, gSpeed);
       }
+      Serial.println("SPEED UP");
       break;
 
     case SLOW_DOWN:
@@ -138,20 +139,22 @@ float fsm(long distance)
       }
       else
       {
-        state = LEFT;
+        state = STOP;
         motor_fwd(motor1, motor2, gSpeed, gSpeed);
       }
+      Serial.println("SLOW DOWN");
       break;
       
     case LEFT:
-      if((distance > dist_t)
+      if(((distance > dist_t) && count == 0) || (count == 2))
       {
         spd = 0;
+        count = 0;
         state = STOP;
       }
       else
       {
-        motor_left(motor1, motor2, gSpeed, gSpeed);
+        motor_back(motor1, motor2, gSpeed, gSpeed);
         count += 1;
       }
 
