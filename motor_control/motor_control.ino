@@ -38,10 +38,10 @@ void setup() {
 
 void loop()
 {
-//  forward(motor2, motor2, 100);
-   motor_fwd(motor2, motor1, 100, 100);
+//  forward(motor2, motor1, 100);
+   motor_fwd(motor1, motor2, 100, 100);
    delay(500);
 //   back(motor1, motor2, 100);
-   motor_back(motor2, motor1, 100, 100);
+   motor_back(motor1, motor2, 100, 100);
    delay(500);
 }
