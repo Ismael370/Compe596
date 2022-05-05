@@ -29,7 +29,7 @@
 const int offsetA = 1;
 const int offsetB = 1;
 
-const int STOP = 0, FORWARD = 1, LEFT = 2; //fsm states
+const int STOP = 0, FORWARD = 1, SPEED_UP = 2, SLOW_DOWN = 3, LEFT = 4; //fsm states
 
 int state = STOP; //Current state
 int count = 0; //Counter for RIGHT state
@@ -102,7 +102,7 @@ float fsm(long distance)
       }
       Serial.println("STOP");
       delay(500);
-      break;
+      break; 
       
     case FORWARD:
       if(distance <= dist_t)
@@ -116,6 +116,12 @@ float fsm(long distance)
       }
       Serial.println("FORWARD");
       delay(500);
+      break;
+
+    case SPEED_UP:
+      break;
+
+    case SLOW_DOWN:
       break;
       
     case LEFT:
