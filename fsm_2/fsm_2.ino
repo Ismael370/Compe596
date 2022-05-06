@@ -43,6 +43,8 @@ int gSpeed = 50;
 long dist_m = 0; //measured distance
 long dist_t = 15; //distance threshold
 
+int counter = 0;//global counter to keep track of how long it takes for it to run in specific
+
 Motor motor1(AIN1, AIN2, PWMA, offsetA, STBY);
 Motor motor2(BIN1, BIN2, PWMB, offsetB, STBY);
 
@@ -183,4 +185,10 @@ void setup() {
 void loop() {
   dist_m = getDistance();
   spd_d = fsm(dist_m);
+  counter ++;
+  Serial,println(counter);
+  if (counter = 100000)
+  {
+    counter=0; 
+  }
 }
