@@ -19,18 +19,18 @@ const int offsetB = 1;
 Motor motor1(AIN1, AIN2, PWMA, offsetA, STBY); //Left motor
 Motor motor2(BIN1, BIN2, PWMB, offsetB, STBY); //Right motor
 
-void motor_fwd(Motor motor1, Motor motor2, int speed1, int speed2)
+void motor_fwd(Motor motor_left, Motor motor_right, int speed1, int speed2)
 {
-  motor1.drive(speed1);
-  motor2.drive(speed2);
+  motor_left.drive(speed1);
+  motor_right.drive(speed2);
 }
 
-void motor_back(Motor motor1, Motor motor2, int speed1, int speed2)
+void motor_back(Motor motor_left, Motor motor_right, int speed1, int speed2)
 {
   int temp1 = abs(speed1);
   int temp2 = abs(speed2);
-  motor1.drive(-temp1);
-  motor2.drive(-temp2);
+  motor_left.drive(-temp1);
+  motor_right.drive(-temp2);
 }
 
 void setup() {
@@ -38,10 +38,10 @@ void setup() {
 
 void loop()
 {
-//  forward(motor2, motor1, 100);
-   motor_fwd(motor1, motor2, 100, 100);
+  forward(motor1, motor2, 150);
+//   motor_fwd(motor1, motor2, 100, 100);
    delay(500);
-//   back(motor1, motor2, 100);
-   motor_back(motor1, motor2, 100, 100);
+   back(motor1, motor2, 150);
+//   motor_back(motor1, motor2, 100, 100);
    delay(500);
 }

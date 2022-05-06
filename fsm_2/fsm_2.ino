@@ -50,6 +50,11 @@ Motor motor2(BIN1, BIN2, PWMB, offsetB, STBY);
 
 LSM9DS1 imu; //9dof sensor
 
+//Timing
+unsigned long start_time;
+unsigned long end_time;
+unsigned long total;
+
 long getDistance()
 {
   long distance = 0;
@@ -131,7 +136,7 @@ float fsm(long distance)
         state = FORWARD;
         motor_fwd(motor1, motor2, gSpeed, gSpeed);
       }
-      Serial.println("SPEED UP");
+      Serial.println("SPEED UP");   
       break;
 
     case SLOW_DOWN:
@@ -184,6 +189,8 @@ void setup() {
 
 void loop() {
   dist_m = getDistance();
+  Serial.print("Distance: "); Serial.print(dist_m);
+  Serial.print("  State: ");
   spd_d = fsm(dist_m);
   counter ++;
   Serial,println(counter);
