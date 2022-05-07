@@ -26,8 +26,8 @@
 #define SAMPLE_SPEED 250 //250ms between samples
 
 // line up with function names like forward.  Value can be 1 or -1
-const int offsetA = 1;
-const int offsetB = 1;
+const int offsetA = -1;
+const int offsetB = -1;
 
 const int STOP = 0, FORWARD = 1, LEFT = 2; //fsm states
 
@@ -40,7 +40,7 @@ float spd_reg = 1.0; //regular speed
 float spd_d = 1.0; //desired speed
 
 long dist_m = 0; //measured distance
-long dist_t = 15; //distance threshold
+long dist_t = 50; //distance threshold
 
 Motor motor1(AIN1, AIN2, PWMA, offsetA, STBY);
 Motor motor2(BIN1, BIN2, PWMB, offsetB, STBY);
@@ -61,26 +61,10 @@ long getDistance()
   return distance; 
 }
 
-void motor_fwd(Motor motor1, Motor motor2, int speed1, int speed2)
+void motor_fwd(Motor motor_left, Motor motor_right, int speed1, int speed2)
 {
-  motor1.drive(speed1);
-  motor2.drive(speed2);
-}
-
-void motor_back(Motor motor1, Motor motor2, int speed1, int speed2)
-{
-  int temp1 = abs(speed1);
-  int temp2 = abs(speed2);
-  motor1.drive(-temp1);
-  motor2.drive(-temp2);
-}
-
-void motor_left(Motor motor1, Motor motor2, int speed1, int speed2)
-{
-  int temp1 = abs(speed1)/2;
-  int temp2 = abs(speed2)/2;
-  motor1.drive(-temp1);
-  motor2.drive(temp2);
+  motor_left.drive(speed1);
+  motor_right.drive(speed2);
 }
 
 float fsm(long distance)
@@ -91,7 +75,12 @@ float fsm(long distance)
   {
     case STOP:
       brake(motor1, motor2);
-      if(distance > dist_t)
+      if(distance == 0)
+      {
+        spd = spd_reg;
+        state = FORWARD;
+      }
+      else if(distance > dist_t)
       {
         spd = spd_reg;
         state = FORWARD;
@@ -101,11 +90,15 @@ float fsm(long distance)
         state = LEFT;
       }
       Serial.println("STOP");
-      delay(500);
+      delay(50);
       break;
       
     case FORWARD:
-      if(distance <= dist_t)
+      if(distance == 0)
+      {
+        state = FORWARD;
+      }
+      else if(distance <= dist_t)
       {
         spd = 0;
         state = STOP;
@@ -113,29 +106,30 @@ float fsm(long distance)
       else
       {
 
-        motor_fwd(motor1, motor2, 100, 100);
-        forward(motor1, motor2, 100);
+        motor_fwd(motor1, motor2, 150, 255);
+//        forward(motor1, motor2, 100);
       }
       Serial.println("FORWARD");
-      delay(500);
+      delay(50);
       break;
       
     case LEFT:
 
-      if((distance > dist_t))
+      if((distance > dist_t && count == 0) || count >= 2)
 
       {
         spd = 0;
+        count = 0;
         state = STOP;
       }
       else
       {
-        motor_left(motor1, motor2, 50,50);
+        motor_fwd(motor1, motor2, 0, 175);
         count += 1;
       }
 
       Serial.println("LEFT");
-      delay(500);
+      delay(50);
       break;
 
       default:
