@@ -123,7 +123,7 @@ float fsm(long distance)
         motor_fwd(motor1, motor2, gSpeed, gSpeed);
       }
       Serial.println("FORWARD");
-      delay(500);
+      delay(50);
       break;
 
     case SPEED_UP:
@@ -137,6 +137,7 @@ float fsm(long distance)
         motor_fwd(motor1, motor2, gSpeed, gSpeed);
       }
       Serial.println("SPEED UP");   
+      delay(50);
       break;
 
     case SLOW_DOWN:
@@ -150,6 +151,7 @@ float fsm(long distance)
         motor_fwd(motor1, motor2, gSpeed, gSpeed);
       }
       Serial.println("SLOW DOWN");
+      delay(50);
       break;
       
     case LEFT:
@@ -166,7 +168,7 @@ float fsm(long distance)
       }
 
       Serial.println("LEFT");
-      delay(500);
+      delay(50);
       break;
 
       default:
@@ -192,9 +194,9 @@ void loop() {
   Serial.print("Distance: "); Serial.print(dist_m);
   Serial.print("  State: ");
   spd_d = fsm(dist_m);
-  counter ++;
-  Serial,println(counter);
-  if (counter = 100000)
+  counter++;
+  Serial.println(counter);
+  if (counter == 100000)
   {
     counter=0; 
   }

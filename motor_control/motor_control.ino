@@ -33,15 +33,24 @@ void motor_back(Motor motor_left, Motor motor_right, int speed1, int speed2)
   motor_right.drive(-temp2);
 }
 
+void motor_left(Motor motor_left, Motor motor_right, int speed1, int speed2)
+{
+  int temp1 = abs(speed1)/2;
+  int temp2 = abs(speed2)/2;
+  motor1.drive(-temp1);
+  motor2.drive(temp2);
+}
+
 void setup() {
 }
 
 void loop()
 {
-  forward(motor1, motor2, 150);
-//   motor_fwd(motor1, motor2, 100, 100);
+//motor 2/right - 150
+//  forward(motor1, motor2, 150);
+   motor_fwd(motor1, motor2, -150, -255);
    delay(500);
-   back(motor1, motor2, 150);
-//   motor_back(motor1, motor2, 100, 100);
+//   back(motor1, motor2, 150);
+//   motor_back(motor1, motor2, 150, 100);
    delay(500);
 }
