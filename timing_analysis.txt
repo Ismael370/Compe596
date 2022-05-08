@@ -1,0 +1,13 @@
+10 times	count = 1500
+
+1 - 4:19.32
+2 - 3:49.40
+3 - 3:25  	 	Max reliable distance - 151 - 172 person
+4 - 4:04.14             Max reliable distance - 230 notebook 
+5 - 4:07.27		Max reliable distance - 176 - 202 person|198 notebook
+6 - 4:13.64 		Max reliable distance -	156 - 160 person|210 notebook
+7 - 3:55.94 		Max reliable distance -	person 171-183|notebook - 190|change of states - 55
+8 - 3:21.15		Max reliable distance - person 178-185|notebook 233-237 | change of states - 18
+9 - 2:50.27		Max reliable distance - person 156-178|notebook 231|change of states - 16
+10 - 3:10.20		Max reliable distance - person 157-185|notebook 249-256| change of state 15
+
